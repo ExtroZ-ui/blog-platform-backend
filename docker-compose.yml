@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:16
+    container_name: blog_platform_db
+    restart: always
+    environment:
+      POSTGRES_DB: blog_platform
+      POSTGRES_USER: blog_user
+      POSTGRES_PASSWORD: blog_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - blog_platform_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U blog_user -d blog_platform"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    container_name: blog_platform_api
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PROJECT_NAME: Blog Platform API
+      DATABASE_URL: postgresql://blog_user:blog_password@db:5432/blog_platform
+      SECRET_KEY: blog-platform-secret-key-change-me
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      REFRESH_TOKEN_EXPIRE_DAYS: 7
+    ports:
+      - "8000:8000"
+
+volumes:
+  blog_platform_pgdata:
