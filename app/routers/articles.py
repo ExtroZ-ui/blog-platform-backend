@@ -11,6 +11,8 @@ from app.models.comment import Comment
 from app.models.like import Like
 from app.models.user import User
 from app.schemas.article import (
+    ArticleAiPreviewRequest,
+    ArticleAiPreviewResponse,
     ArticleCreate,
     ArticleLikeResponse,
     ArticleRead,
@@ -88,6 +90,11 @@ def build_article_response(
         status=article.status,
         sentiment=article.sentiment,
         age_rating=article.age_rating,
+        ai_summary=article.ai_summary or "",
+        ai_keywords=article.ai_keywords or "",
+        reading_time_minutes=article.reading_time_minutes or 1,
+        moderation_risk=article.moderation_risk or "low",
+        ai_recommendation=article.ai_recommendation or "",
         views_count=article.views_count,
         author_id=article.author_id,
         category_id=article.category_id,
@@ -97,6 +104,25 @@ def build_article_response(
         updated_at=article.updated_at,
     )
 
+@router.post(
+    "/ai-preview",
+    response_model=ArticleAiPreviewResponse,
+)
+def preview_article_ai_analysis(
+    preview_data: ArticleAiPreviewRequest,
+    current_user: Annotated[User, Depends(get_current_user)],
+):
+    ai_result = analyze_article_content(preview_data.content)
+
+    return ArticleAiPreviewResponse(
+        sentiment=str(ai_result["sentiment"]),
+        age_rating=str(ai_result["age_rating"]),
+        ai_summary=str(ai_result["ai_summary"]),
+        ai_keywords=str(ai_result["ai_keywords"]),
+        reading_time_minutes=int(ai_result["reading_time_minutes"]),
+        moderation_risk=str(ai_result["moderation_risk"]),
+        ai_recommendation=str(ai_result["ai_recommendation"]),
+    )
 
 @router.post(
     "",
@@ -116,13 +142,18 @@ def create_article(
     ai_result = analyze_article_content(article_data.content)
 
     article = Article(
-        title=article_data.title,
-        content=article_data.content,
-        status=article_data.status,
-        sentiment=ai_result["sentiment"],
-        age_rating=ai_result["age_rating"],
-        author_id=current_user.id,
-        category_id=article_data.category_id,
+    title=article_data.title,
+    content=article_data.content,
+    status=article_data.status,
+    sentiment=str(ai_result["sentiment"]),
+    age_rating=str(ai_result["age_rating"]),
+    ai_summary=str(ai_result["ai_summary"]),
+    ai_keywords=str(ai_result["ai_keywords"]),
+    reading_time_minutes=int(ai_result["reading_time_minutes"]),
+    moderation_risk=str(ai_result["moderation_risk"]),
+    ai_recommendation=str(ai_result["ai_recommendation"]),
+    author_id=current_user.id,
+    category_id=article_data.category_id,
     )
 
     db.add(article)
@@ -315,8 +346,14 @@ def update_article(
         article.content = update_data["content"]
 
         ai_result = analyze_article_content(article.content)
-        article.sentiment = ai_result["sentiment"]
-        article.age_rating = ai_result["age_rating"]
+
+        article.sentiment = str(ai_result["sentiment"])
+        article.age_rating = str(ai_result["age_rating"])
+        article.ai_summary = str(ai_result["ai_summary"])
+        article.ai_keywords = str(ai_result["ai_keywords"])
+        article.reading_time_minutes = int(ai_result["reading_time_minutes"])
+        article.moderation_risk = str(ai_result["moderation_risk"])
+        article.ai_recommendation = str(ai_result["ai_recommendation"])
 
     if "category_id" in update_data:
         article.category_id = update_data["category_id"]
@@ -480,4 +517,6 @@ def get_article_stats(
         comments_count=comments_count,
         sentiment=article.sentiment,
         age_rating=article.age_rating,
-    )
+        reading_time_minutes=article.reading_time_minutes or 1,
+        moderation_risk=article.moderation_risk or "low",
+)

@@ -5,8 +5,6 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 ArticleStatus = Literal["draft", "published"]
-ArticleSentiment = Literal["positive", "negative", "neutral"]
-ArticleAgeRating = Literal["0+", "12+", "16+", "18+"]
 
 
 class ArticleCreate(BaseModel):
@@ -55,6 +53,24 @@ class ArticleUpdate(BaseModel):
     )
 
 
+class ArticleAiPreviewRequest(BaseModel):
+    content: str = Field(
+        ...,
+        min_length=10,
+        examples=["Это полезная статья о развитии технологий."],
+    )
+
+
+class ArticleAiPreviewResponse(BaseModel):
+    sentiment: str
+    age_rating: str
+    ai_summary: str
+    ai_keywords: str
+    reading_time_minutes: int
+    moderation_risk: str
+    ai_recommendation: str
+
+
 class ArticleRead(BaseModel):
     id: int
     title: str
@@ -62,6 +78,11 @@ class ArticleRead(BaseModel):
     status: str
     sentiment: str
     age_rating: str
+    ai_summary: str
+    ai_keywords: str
+    reading_time_minutes: int
+    moderation_risk: str
+    ai_recommendation: str
     views_count: int
     author_id: int
     category_id: int
@@ -80,6 +101,8 @@ class ArticleStats(BaseModel):
     comments_count: int
     sentiment: str
     age_rating: str
+    reading_time_minutes: int
+    moderation_risk: str
 
 
 class ArticleLikeResponse(BaseModel):

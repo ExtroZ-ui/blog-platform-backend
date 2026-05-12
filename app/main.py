@@ -4,6 +4,7 @@ from app.core.config import settings
 from app.routers.articles import router as articles_router
 from app.routers.auth import router as auth_router
 from app.routers.categories import router as categories_router
+from app.routers.comments import router as comments_router
 
 
 app = FastAPI(
@@ -15,6 +16,7 @@ app = FastAPI(
 app.include_router(auth_router)
 app.include_router(categories_router)
 app.include_router(articles_router)
+app.include_router(comments_router)
 
 
 @app.get("/")

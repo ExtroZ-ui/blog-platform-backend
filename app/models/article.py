@@ -34,6 +34,31 @@ class Article(Base):
         nullable=False,
     )
 
+    ai_summary: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    ai_keywords: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    reading_time_minutes: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    moderation_risk: Mapped[str | None] = mapped_column(
+        String(30),
+        nullable=True,
+    )
+
+    ai_recommendation: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
     views_count: Mapped[int] = mapped_column(
         Integer,
         default=0,
