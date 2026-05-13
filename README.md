@@ -1,4 +1,4 @@
-# Blog Platform
+# Блог платформа
 
 Backend API для платформы блогов, разработанный на FastAPI.
 
