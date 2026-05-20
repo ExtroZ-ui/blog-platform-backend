@@ -1,0 +1,78 @@
+.choice-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 22px;
+    margin-bottom: 20px;
+}
+
+.choice {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.choice__input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.choice__box {
+    position: relative;
+    display: inline-flex;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-surface);
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.choice:hover .choice__box {
+    border-color: var(--color-primary);
+}
+
+.choice__input:checked + .choice__box {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+}
+
+.choice__input:checked + .choice__box::after {
+    content: "";
+    width: 10px;
+    height: 6px;
+    border-bottom: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
+    transform: rotate(-45deg);
+}
+
+.choice__input:focus-visible + .choice__box {
+    box-shadow: var(--shadow-focus);
+}
+
+.choice__text {
+    color: var(--color-text);
+    font-size: 15px;
+}
+
+.choice--radio .choice__box {
+    border-radius: 50%;
+}
+
+.choice--radio .choice__input:checked + .choice__box::after {
+    width: 8px;
+    height: 8px;
+    border: 0;
+    border-radius: 50%;
+    background: #ffffff;
+    transform: none;
+}

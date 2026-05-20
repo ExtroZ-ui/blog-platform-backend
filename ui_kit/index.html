@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/ui-kit/favicon.svg" type="image/svg+xml">
+    <title>Blog Platform UI Kit</title>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar__container">
+            <a class="navbar__logo" href="#">Blog UI Kit</a>
+
+            <input class="navbar__checkbox" type="checkbox" id="navbar-toggle">
+            <label class="navbar__toggle" for="navbar-toggle">
+                <span class="navbar__toggle-line"></span>
+                <span class="navbar__toggle-line"></span>
+                <span class="navbar__toggle-line"></span>
+            </label>
+
+            <nav class="navbar__menu">
+                <a class="navbar__link" href="#buttons">Кнопки</a>
+                <a class="navbar__link" href="#inputs">Поля ввода</a>
+                <a class="navbar__link" href="#dropdowns">Dropdown</a>
+                <a class="navbar__link" href="#choices">Checkbox / Radio</a>
+                <a class="navbar__link" href="#cards">Карточки</a>
+                <a class="navbar__link" href="#grid">Сетка</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page">
+        <section class="hero">
+            <div class="container">
+                <p class="hero__label">UI Kit для итогового проекта</p>
+                <h1 class="hero__title">Базовая дизайн-система для платформы блогов</h1>
+                <p class="hero__text">
+                    Набор адаптивных компонентов интерфейса: кнопки, поля ввода,
+                    выпадающие списки, чекбоксы, радиокнопки, карточки, навигация,
+                    контейнеры и grid-сетки.
+                </p>
+
+                <div class="hero__actions">
+                    <a class="button button--primary button--large" href="#buttons">Смотреть компоненты</a>
+                    <a class="button button--secondary button--large" href="#cards">Примеры карточек</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="docs-section" id="buttons">
+            <div class="container">
+                <h2 class="docs-section__title">1. Button</h2>
+                <p class="docs-section__text">
+                    Компонент кнопки поддерживает варианты primary, secondary и disabled,
+                    а также размеры small, medium и large.
+                </p>
+
+                <div class="component-preview">
+                    <button class="button button--primary button--small">Primary small</button>
+                    <button class="button button--primary button--medium">Primary medium</button>
+                    <button class="button button--primary button--large">Primary large</button>
+                </div>
+
+                <div class="component-preview">
+                    <button class="button button--secondary button--small">Secondary small</button>
+                    <button class="button button--secondary button--medium">Secondary medium</button>
+                    <button class="button button--secondary button--large">Secondary large</button>
+                </div>
+
+                <div class="component-preview">
+                    <button class="button button--disabled button--medium" disabled>Disabled</button>
+                </div>
+
+                <pre class="code-block"><code>&lt;button class="button button--primary button--medium"&gt;Primary&lt;/button&gt;</code></pre>
+            </div>
+        </section>
+
+        <section class="docs-section" id="inputs">
+            <div class="container">
+                <h2 class="docs-section__title">2. Input</h2>
+                <p class="docs-section__text">
+                    Поле ввода поддерживает обычное состояние, фокус, ошибку и иконку.
+                </p>
+
+                <div class="form-grid">
+                    <div class="input">
+                        <label class="input__label" for="input-title">Название статьи</label>
+                        <input class="input__control" id="input-title" type="text" placeholder="Введите название">
+                    </div>
+
+                    <div class="input input--with-icon">
+                        <label class="input__label" for="input-search">Поиск</label>
+                        <div class="input__field">
+                            <span class="input__icon" aria-hidden="true">⌕</span>
+                            <input class="input__control input__control--with-icon" id="input-search" type="text" placeholder="Найти статью">
+                        </div>
+                    </div>
+
+                    <div class="input input--error">
+                        <label class="input__label" for="input-error">Логин</label>
+                        <input class="input__control" id="input-error" type="text" value="ab">
+                        <p class="input__error">Логин должен содержать минимум 3 символа.</p>
+                    </div>
+                </div>
+
+                <pre class="code-block"><code>&lt;div class="input input--error"&gt;
+    &lt;label class="input__label"&gt;Логин&lt;/label&gt;
+    &lt;input class="input__control" type="text"&gt;
+    &lt;p class="input__error"&gt;Ошибка ввода&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+        </section>
+
+        <section class="docs-section" id="dropdowns">
+            <div class="container">
+                <h2 class="docs-section__title">3. Dropdown</h2>
+                <p class="docs-section__text">
+                    Выпадающий список можно использовать для выбора категории статьи.
+                </p>
+
+                <div class="form-grid">
+                    <div class="dropdown">
+                        <label class="dropdown__label" for="category">Категория</label>
+                        <select class="dropdown__control" id="category">
+                            <option>Технологии</option>
+                            <option>Образование</option>
+                            <option>Наука</option>
+                            <option>Новости</option>
+                        </select>
+                    </div>
+                </div>
+
+                <pre class="code-block"><code>&lt;select class="dropdown__control"&gt;
+    &lt;option&gt;Технологии&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+            </div>
+        </section>
+
+        <section class="docs-section" id="choices">
+            <div class="container">
+                <h2 class="docs-section__title">4. Checkbox и Radio</h2>
+                <p class="docs-section__text">
+                    Компоненты подходят для фильтров, настроек и выбора статуса публикации.
+                </p>
+
+                <div class="choice-group">
+                    <label class="choice">
+                        <input class="choice__input" type="checkbox">
+                        <span class="choice__box"></span>
+                        <span class="choice__text">Показывать только опубликованные статьи</span>
+                    </label>
+
+                    <label class="choice">
+                        <input class="choice__input" type="checkbox" checked>
+                        <span class="choice__box"></span>
+                        <span class="choice__text">Включить модерацию комментариев</span>
+                    </label>
+                </div>
+
+                <div class="choice-group">
+                    <label class="choice choice--radio">
+                        <input class="choice__input" type="radio" name="status" checked>
+                        <span class="choice__box"></span>
+                        <span class="choice__text">Черновик</span>
+                    </label>
+
+                    <label class="choice choice--radio">
+                        <input class="choice__input" type="radio" name="status">
+                        <span class="choice__box"></span>
+                        <span class="choice__text">Опубликовано</span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <section class="docs-section" id="cards">
+            <div class="container">
+                <h2 class="docs-section__title">5. Card</h2>
+                <p class="docs-section__text">
+                    Карточка содержит заголовок, изображение и текст. Есть модификаторы
+                    с изображением, без изображения и размеры small, medium, large.
+                </p>
+
+                <div class="grid grid--cards">
+    <article class="card card--small card--with-image">
+        <div class="card__image card__image--tech" role="img" aria-label="Иллюстрация статьи о технологиях"></div>
+        <div class="card__body">
+            <span class="card__tag">Технологии</span>
+            <h3 class="card__title">Короткая карточка</h3>
+            <p class="card__text">Небольшое описание статьи для списка публикаций.</p>
+            <button class="button button--primary button--small">Читать</button>
+        </div>
+    </article>
+
+    <article class="card card--medium card--with-image">
+        <div class="card__image card__image--education" role="img" aria-label="Иллюстрация статьи об образовании"></div>
+        <div class="card__body">
+            <span class="card__tag">Образование</span>
+            <h3 class="card__title">Средняя карточка статьи</h3>
+            <p class="card__text">
+                Такой вариант можно использовать на главной странице блога
+                или в списке популярных материалов.
+            </p>
+            <button class="button button--secondary button--medium">Подробнее</button>
+        </div>
+    </article>
+
+    <article class="card card--large card--no-image">
+        <div class="card__body">
+            <span class="card__tag">Без изображения</span>
+            <h3 class="card__title">Большая карточка без изображения</h3>
+            <p class="card__text">
+                Карточка без изображения подходит для текстовых материалов,
+                заметок, черновиков или элементов личного кабинета автора.
+            </p>
+            <button class="button button--primary button--medium">Открыть</button>
+        </div>
+    </article>
+</div>
+
+                <pre class="code-block"><code>&lt;article class="card card--medium card--with-image"&gt;
+    &lt;img class="card__image" src="image.jpg" alt="..."&gt;
+    &lt;div class="card__body"&gt;
+        &lt;h3 class="card__title"&gt;Заголовок&lt;/h3&gt;
+        &lt;p class="card__text"&gt;Описание&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/article&gt;</code></pre>
+            </div>
+        </section>
+
+        <section class="docs-section" id="grid">
+            <div class="container">
+                <h2 class="docs-section__title">6. Flexbox и Grid</h2>
+                <p class="docs-section__text">
+                    Для выравнивания используется центральный контейнер, flex-обёртки
+                    и адаптивная grid-сетка карточек.
+                </p>
+
+                <div class="grid grid--demo">
+                    <div class="grid-demo-item">1</div>
+                    <div class="grid-demo-item">2</div>
+                    <div class="grid-demo-item">3</div>
+                    <div class="grid-demo-item">4</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="footer__text">Blog Platform UI Kit — домашнее задание по теме «Семантическая разметка и CSS».</p>
+        </div>
+    </footer>
+</body>
+</html>
