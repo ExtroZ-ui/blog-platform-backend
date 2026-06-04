@@ -1,3 +1,4 @@
+import pytest
 from fastapi.testclient import TestClient
 
 
@@ -59,6 +60,59 @@ def test_register_with_short_password_returns_422(client: TestClient):
             "login": "ivan",
             "password": "123",
         },
+    )
+
+    assert response.status_code == 422
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [
+        {
+            "first_name": "Иван1",
+            "last_name": "Иванов",
+            "login": "ivan1",
+            "password": "password123",
+        },
+        {
+            "first_name": "Иван",
+            "last_name": "Иванов2",
+            "login": "ivan2",
+            "password": "password123",
+        },
+        {
+            "first_name": "Иван",
+            "last_name": "Иванов",
+            "login": "иван",
+            "password": "password123",
+        },
+        {
+            "first_name": "Иван",
+            "last_name": "Иванов",
+            "login": "ivan3",
+            "password": "password",
+        },
+        {
+            "first_name": "Иван",
+            "last_name": "Иванов",
+            "login": "ivan4",
+            "password": "12345678",
+        },
+        {
+            "first_name": "Иван",
+            "last_name": "Иванов",
+            "login": "ivan5",
+            "password": "password 123",
+        },
+    ],
+)
+def test_register_invalid_user_data_returns_422(
+    client: TestClient,
+    payload,
+):
+    response = client.post(
+        "/auth/register",
+        json=payload,
     )
 
     assert response.status_code == 422
@@ -202,3 +256,29 @@ def test_change_password_with_wrong_old_password_returns_400(
 
     assert response.status_code == 400
     assert response.json()["detail"] == "Старый пароль указан неверно"
+
+
+@pytest.mark.parametrize(
+    "new_password",
+    [
+        "password",
+        "12345678",
+        "new password123",
+        "short1",
+    ],
+)
+def test_change_password_with_weak_new_password_returns_422(
+    client: TestClient,
+    auth_context,
+    new_password,
+):
+    response = client.post(
+        "/auth/change-password",
+        json={
+            "old_password": "password123",
+            "new_password": new_password,
+        },
+        headers=auth_context["headers"],
+    )
+
+    assert response.status_code == 422

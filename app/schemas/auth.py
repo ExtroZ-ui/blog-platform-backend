@@ -1,4 +1,6 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+
+from app.schemas.user import validate_password_strength
 
 
 class TokenResponse(BaseModel):
@@ -23,7 +25,12 @@ class ChangePasswordRequest(BaseModel):
     )
     new_password: str = Field(
         ...,
-        min_length=6,
+        min_length=8,
         max_length=128,
         examples=["newpassword123"],
     )
+
+    @field_validator("new_password")
+    @classmethod
+    def validate_new_password(cls, value: str) -> str:
+        return validate_password_strength(value)

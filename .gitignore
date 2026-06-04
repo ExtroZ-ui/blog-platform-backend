@@ -6,4 +6,9 @@ blog.db
 .pytest_cache/
 .idea/
 .vscode/
-alembic/versions/*.py
+.coverage
+htmlcov/
+
+frontend/node_modules/
+frontend/dist/
+frontend/.env
