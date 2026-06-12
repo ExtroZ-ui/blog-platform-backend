@@ -6,6 +6,7 @@ services:
     region: frankfurt
     dockerfilePath: ./Dockerfile
     dockerContext: .
+    healthCheckPath: /health
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -20,12 +21,11 @@ services:
       - key: REFRESH_TOKEN_EXPIRE_DAYS
         value: 7
       - key: CORS_ORIGINS
-        value: http://localhost:3000,http://localhost:5173,https://blog-platform-frontend.onrender.com
+        value: http://localhost:3000,http://localhost:5173,http://127.0.0.1:5173,https://blog-platform-frontend.onrender.com
 
   - type: web
     name: blog-platform-frontend
     runtime: static
-    plan: free
     buildCommand: cd frontend && npm ci && npm run build
     staticPublishPath: frontend/dist
     envVars:
