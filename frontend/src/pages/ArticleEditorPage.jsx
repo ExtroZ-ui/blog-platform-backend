@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import {
   createArticle,
@@ -11,11 +11,13 @@ import { getCategories } from '../api/categoriesApi';
 import { Button } from '../components/Button/Button';
 import { Input } from '../components/Input/Input';
 import { Loader } from '../components/Loader/Loader';
+import { RichContent } from '../components/RichContent/RichContent';
 
 const INITIAL_FORM = {
   title: '',
   content: '',
   category_id: '',
+  cover_image_url: '',
 };
 
 export function ArticleEditorPage() {
@@ -32,6 +34,15 @@ export function ArticleEditorPage() {
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
   const [error, setError] = useState('');
   const [previewError, setPreviewError] = useState('');
+
+  const symbolsCount = form.content.length;
+
+  const wordsCount = useMemo(() => {
+    return form.content
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean).length;
+  }, [form.content]);
 
   const canPreview = useMemo(
     () => form.content.trim().length >= 10,
@@ -69,6 +80,7 @@ export function ArticleEditorPage() {
           title: article.title,
           content: article.content,
           category_id: String(article.category_id),
+          cover_image_url: article.cover_image_url || '',
         });
 
         setAiPreview({
@@ -101,6 +113,46 @@ export function ArticleEditorPage() {
     }));
   }
 
+  function insertText(before, after = '') {
+    const textarea = document.querySelector('#article-content-editor');
+
+    if (!textarea) {
+      return;
+    }
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = form.content.slice(start, end);
+    const textForInsert = selectedText || 'текст';
+
+    const nextContent = [
+      form.content.slice(0, start),
+      `${before}${textForInsert}${after}`,
+      form.content.slice(end),
+    ].join('');
+
+    setForm((currentForm) => ({
+      ...currentForm,
+      content: nextContent,
+    }));
+
+    setTimeout(() => {
+      textarea.focus();
+      textarea.selectionStart = start + before.length;
+      textarea.selectionEnd = start + before.length + textForInsert.length;
+    }, 0);
+  }
+
+  function insertImageMarkdown() {
+    const imageUrl = window.prompt('Вставьте URL изображения');
+
+    if (!imageUrl) {
+      return;
+    }
+
+    insertText(`\n![Описание изображения](${imageUrl})\n`, '');
+  }
+
   function validateForm() {
     if (form.title.trim().length < 3) {
       return 'Название статьи должно содержать минимум 3 символа.';
@@ -128,7 +180,10 @@ export function ArticleEditorPage() {
     try {
       setIsPreviewLoading(true);
 
-      const preview = await previewArticleAi(form.content.trim());
+      const preview = await previewArticleAi(
+        `${form.title.trim()}\n\n${form.content.trim()}`,
+      );
+
       setAiPreview(preview);
     } catch {
       setPreviewError('Не удалось выполнить AI-анализ.');
@@ -154,6 +209,7 @@ export function ArticleEditorPage() {
         content: form.content.trim(),
         category_id: Number(form.category_id),
         status,
+        cover_image_url: form.cover_image_url.trim() || null,
       };
 
       if (isEditMode) {
@@ -175,20 +231,40 @@ export function ArticleEditorPage() {
   }
 
   return (
-    <section className="page-section">
+    <section className="page-section editor-page">
       <div className="container">
-        <p className="page-section__label">
-          Редактор
-        </p>
+        <Link className="back-link" to="/dashboard/articles">
+          ← Назад к моим статьям
+        </Link>
 
-        <h1 className="page-section__title">
-          {isEditMode ? 'Редактирование статьи' : 'Новая статья'}
-        </h1>
+        <div className="editor-head">
+          <div>
+            <p className="page-section__label">
+              Редактор
+            </p>
 
-        <p className="page-section__text">
-          Заполните название, выберите категорию и добавьте текст статьи.
-          Материал можно сохранить как черновик или сразу опубликовать.
-        </p>
+            <h1 className="page-section__title">
+              {isEditMode ? 'Редактирование статьи' : 'Новая статья'}
+            </h1>
+
+            <p className="page-section__text">
+              Добавьте обложку, оформите текст, проверьте материал через
+              AI-анализ и сохраните статью.
+            </p>
+          </div>
+
+          <div className="editor-metrics">
+            <article className="editor-metric">
+              <span>Символы</span>
+              <strong>{symbolsCount}</strong>
+            </article>
+
+            <article className="editor-metric">
+              <span>Слова</span>
+              <strong>{wordsCount}</strong>
+            </article>
+          </div>
+        </div>
 
         <div className="editor-layout">
           <form className="editor-form" onSubmit={(event) => event.preventDefault()}>
@@ -223,18 +299,63 @@ export function ArticleEditorPage() {
               </select>
             </label>
 
+            <Input
+              label="URL обложки статьи"
+              name="cover_image_url"
+              value={form.cover_image_url}
+              onChange={handleChange}
+              placeholder="https://example.com/cover.jpg"
+            />
+
+            {form.cover_image_url && (
+              <div className="editor-cover-preview">
+                <img src={form.cover_image_url} alt="Предпросмотр обложки" />
+              </div>
+            )}
+
             <label className="toolbar-field">
               <span className="toolbar-field__label">
                 Текст статьи
               </span>
 
+              <div className="editor-toolbar">
+                <button type="button" onClick={() => insertText('**', '**')}>
+                  Жирный
+                </button>
+
+                <button type="button" onClick={() => insertText('*', '*')}>
+                  Курсив
+                </button>
+
+                <button type="button" onClick={() => insertText('\n# ', '')}>
+                  Заголовок
+                </button>
+
+                <button type="button" onClick={() => insertText('\n> ', '')}>
+                  Цитата
+                </button>
+
+                <button type="button" onClick={() => insertText('\n- ', '')}>
+                  Список
+                </button>
+
+                <button type="button" onClick={() => insertText('[', '](https://example.com)')}>
+                  Ссылка
+                </button>
+
+                <button type="button" onClick={insertImageMarkdown}>
+                  Картинка
+                </button>
+              </div>
+
               <textarea
+                id="article-content-editor"
                 className="editor-form__textarea"
                 name="content"
                 value={form.content}
                 onChange={handleChange}
                 placeholder="Введите текст статьи"
-                rows="12"
+                rows="14"
               />
             </label>
 
@@ -271,17 +392,33 @@ export function ArticleEditorPage() {
                 {isPreviewLoading ? 'Анализ...' : 'AI-анализ'}
               </Button>
             </div>
+
+            {form.content.trim().length > 0 && (
+              <div className="editor-content-preview">
+                <h2 className="editor-content-preview__title">
+                  Предпросмотр текста
+                </h2>
+
+                <RichContent content={form.content} />
+              </div>
+            )}
           </form>
 
           <aside className="ai-preview">
-            <h2 className="ai-preview__title">
-              AI-предпросмотр
-            </h2>
+            <div className="ai-preview__header">
+              <span className="ai-preview__icon">🤖</span>
 
-            <p className="ai-preview__text">
-              Здесь отображается анализ статьи: тональность, возрастной рейтинг,
-              ключевые слова, время чтения и рекомендация автору.
-            </p>
+              <div>
+                <h2 className="ai-preview__title">
+                  AI-предпросмотр
+                </h2>
+
+                <p className="ai-preview__text">
+                  Анализирует тональность, возрастной рейтинг, ключевые слова,
+                  время чтения и риск модерации.
+                </p>
+              </div>
+            </div>
 
             {previewError && (
               <p className="form__error">
@@ -292,34 +429,44 @@ export function ArticleEditorPage() {
             {!aiPreview && (
               <div className="empty-state empty-state--small">
                 <p className="empty-state__text">
-                  Нажмите «AI-анализ», чтобы получить предварительную оценку текста.
+                  Введите текст статьи и нажмите «AI-анализ».
                 </p>
               </div>
             )}
 
             {aiPreview && (
               <div className="ai-preview__result">
-                <p>
-                  <strong>Тональность:</strong> {aiPreview.sentiment}
-                </p>
-                <p>
-                  <strong>Возрастной рейтинг:</strong> {aiPreview.age_rating}
-                </p>
-                <p>
-                  <strong>Время чтения:</strong> {aiPreview.reading_time_minutes} мин.
-                </p>
-                <p>
-                  <strong>Риск модерации:</strong> {aiPreview.moderation_risk}
-                </p>
-                <p>
-                  <strong>Ключевые слова:</strong> {aiPreview.ai_keywords || 'не определены'}
-                </p>
-                <p>
-                  <strong>Резюме:</strong> {aiPreview.ai_summary || 'не сформировано'}
-                </p>
-                <p>
-                  <strong>Рекомендация:</strong> {aiPreview.ai_recommendation}
-                </p>
+                <article className="ai-preview-card">
+                  <span>Тональность</span>
+                  <strong>{aiPreview.sentiment}</strong>
+                </article>
+
+                <article className="ai-preview-card">
+                  <span>Возрастной рейтинг</span>
+                  <strong>{aiPreview.age_rating}</strong>
+                </article>
+
+                <article className="ai-preview-card">
+                  <span>Время чтения</span>
+                  <strong>{aiPreview.reading_time_minutes} мин.</strong>
+                </article>
+
+                <article className="ai-preview-card">
+                  <span>Риск модерации</span>
+                  <strong>{aiPreview.moderation_risk}</strong>
+                </article>
+
+                <div className="ai-preview-note">
+                  <p>
+                    <strong>Ключевые слова:</strong>{' '}
+                    {aiPreview.ai_keywords || 'не определены'}
+                  </p>
+
+                  <p>
+                    <strong>Резюме:</strong>{' '}
+                    {aiPreview.ai_summary || 'не сформировано'}
+                  </p>
+                </div>
               </div>
             )}
           </aside>

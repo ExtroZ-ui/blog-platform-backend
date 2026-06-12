@@ -42,6 +42,8 @@ class CommentRead(BaseModel):
     text: str
     moderation_status: str
     author_id: int
+    author_login: str | None = None
+    author_name: str | None = None
     article_id: int
     created_at: datetime
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Button } from '../components/Button/Button';
 import { Input } from '../components/Input/Input';
@@ -15,6 +15,7 @@ export function LoginPage() {
   });
 
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -40,47 +41,71 @@ export function LoginPage() {
     }
 
     try {
+      setIsSubmitting(true);
       await login(form);
       navigate('/dashboard');
     } catch {
       setError('Неверный логин или пароль.');
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
   return (
-    <section className="page-section">
-      <div className="auth-card">
-        <h1 className="auth-card__title">Вход</h1>
-        <p className="auth-card__text">
-          Войдите в аккаунт, чтобы создавать статьи и оставлять комментарии.
-        </p>
+    <section className="auth-page">
+      <div className="auth-shell">
+        <div className="auth-hero">
+          <p className="page-section__label">Добро пожаловать</p>
+          <h1 className="auth-hero__title">Войдите в Blog Platform</h1>
+          <p className="auth-hero__text">
+            После входа вы сможете создавать статьи, сохранять черновики,
+            публиковать материалы, оставлять комментарии и ставить лайки.
+          </p>
 
-        <form className="form" onSubmit={handleSubmit}>
-          <Input
-            label="Логин"
-            name="login"
-            value={form.login}
-            onChange={handleChange}
-            placeholder="Введите логин"
-            autoComplete="username"
-          />
+          <div className="auth-hero__features">
+            <span>AI-анализ статей</span>
+            <span>Комментарии</span>
+            <span>Личный кабинет</span>
+          </div>
+        </div>
 
-          <Input
-            label="Пароль"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            type="password"
-            placeholder="Введите пароль"
-            autoComplete="current-password"
-          />
+        <div className="auth-card">
+          <h2 className="auth-card__title">Вход</h2>
+          <p className="auth-card__text">
+            Введите логин и пароль от аккаунта.
+          </p>
 
-          {error && <p className="form__error">{error}</p>}
+          <form className="form" onSubmit={handleSubmit}>
+            <Input
+              label="Логин"
+              name="login"
+              value={form.login}
+              onChange={handleChange}
+              placeholder="ivan"
+              autoComplete="username"
+            />
 
-          <Button type="submit" size="large">
-            Войти
-          </Button>
-        </form>
+            <Input
+              label="Пароль"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              type="password"
+              placeholder="password123"
+              autoComplete="current-password"
+            />
+
+            {error && <p className="form__error">{error}</p>}
+
+            <Button type="submit" size="large" disabled={isSubmitting}>
+              {isSubmitting ? 'Вход...' : 'Войти'}
+            </Button>
+          </form>
+
+          <p className="auth-card__footer">
+            Нет аккаунта? <Link to="/register">Зарегистрироваться</Link>
+          </p>
+        </div>
       </div>
     </section>
   );

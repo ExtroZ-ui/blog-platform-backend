@@ -71,9 +71,26 @@ def check_article_owner(
         )
 
 
+def get_article_like_status(
+    article: Article,
+    user: User | None,
+    db: Session,
+) -> bool:
+    if user is None:
+        return False
+
+    like = db.query(Like).filter(
+        Like.article_id == article.id,
+        Like.user_id == user.id,
+    ).first()
+
+    return like is not None
+
+
 def build_article_response(
     article: Article,
     db: Session,
+    current_user: User | None = None,
 ) -> ArticleRead:
     likes_count = db.query(Like).filter(
         Like.article_id == article.id,
@@ -87,6 +104,7 @@ def build_article_response(
         id=article.id,
         title=article.title,
         content=article.content,
+        cover_image_url=article.cover_image_url,
         status=article.status,
         sentiment=article.sentiment,
         age_rating=article.age_rating,
@@ -100,9 +118,15 @@ def build_article_response(
         category_id=article.category_id,
         likes_count=likes_count,
         comments_count=comments_count,
+        is_liked=get_article_like_status(
+            article=article,
+            user=current_user,
+            db=db,
+        ),
         created_at=article.created_at,
         updated_at=article.updated_at,
     )
+
 
 @router.post(
     "/ai-preview",
@@ -124,6 +148,7 @@ def preview_article_ai_analysis(
         ai_recommendation=str(ai_result["ai_recommendation"]),
     )
 
+
 @router.post(
     "",
     response_model=ArticleRead,
@@ -139,21 +164,24 @@ def create_article(
         db=db,
     )
 
-    ai_result = analyze_article_content(article_data.content)
+    ai_result = analyze_article_content(
+        f"{article_data.title}\n\n{article_data.content}",
+    )
 
     article = Article(
-    title=article_data.title,
-    content=article_data.content,
-    status=article_data.status,
-    sentiment=str(ai_result["sentiment"]),
-    age_rating=str(ai_result["age_rating"]),
-    ai_summary=str(ai_result["ai_summary"]),
-    ai_keywords=str(ai_result["ai_keywords"]),
-    reading_time_minutes=int(ai_result["reading_time_minutes"]),
-    moderation_risk=str(ai_result["moderation_risk"]),
-    ai_recommendation=str(ai_result["ai_recommendation"]),
-    author_id=current_user.id,
-    category_id=article_data.category_id,
+        title=article_data.title,
+        content=article_data.content,
+        cover_image_url=article_data.cover_image_url,
+        status=article_data.status,
+        sentiment=str(ai_result["sentiment"]),
+        age_rating=str(ai_result["age_rating"]),
+        ai_summary=str(ai_result["ai_summary"]),
+        ai_keywords=str(ai_result["ai_keywords"]),
+        reading_time_minutes=int(ai_result["reading_time_minutes"]),
+        moderation_risk=str(ai_result["moderation_risk"]),
+        ai_recommendation=str(ai_result["ai_recommendation"]),
+        author_id=current_user.id,
+        category_id=article_data.category_id,
     )
 
     db.add(article)
@@ -163,6 +191,7 @@ def create_article(
     return build_article_response(
         article=article,
         db=db,
+        current_user=current_user,
     )
 
 
@@ -274,6 +303,7 @@ def get_my_articles(
         build_article_response(
             article=article,
             db=db,
+            current_user=current_user,
         )
         for article in articles
     ]
@@ -339,13 +369,23 @@ def update_article(
             db=db,
         )
 
+    should_recalculate_ai = False
+
     if "title" in update_data:
         article.title = update_data["title"]
+        should_recalculate_ai = True
 
     if "content" in update_data:
         article.content = update_data["content"]
+        should_recalculate_ai = True
 
-        ai_result = analyze_article_content(article.content)
+    if "cover_image_url" in update_data:
+        article.cover_image_url = update_data["cover_image_url"]
+
+    if should_recalculate_ai:
+        ai_result = analyze_article_content(
+            f"{article.title}\n\n{article.content}",
+        )
 
         article.sentiment = str(ai_result["sentiment"])
         article.age_rating = str(ai_result["age_rating"])
@@ -367,6 +407,7 @@ def update_article(
     return build_article_response(
         article=article,
         db=db,
+        current_user=current_user,
     )
 
 
@@ -422,6 +463,7 @@ def publish_article(
     return build_article_response(
         article=article,
         db=db,
+        current_user=current_user,
     )
 
 
@@ -461,6 +503,7 @@ def toggle_like(
         return ArticleLikeResponse(
             article_id=article_id,
             liked=False,
+            is_liked=False,
             likes_count=likes_count,
         )
 
@@ -479,6 +522,7 @@ def toggle_like(
     return ArticleLikeResponse(
         article_id=article_id,
         liked=True,
+        is_liked=True,
         likes_count=likes_count,
     )
 
@@ -519,4 +563,4 @@ def get_article_stats(
         age_rating=article.age_rating,
         reading_time_minutes=article.reading_time_minutes or 1,
         moderation_risk=article.moderation_risk or "low",
-)
+    )

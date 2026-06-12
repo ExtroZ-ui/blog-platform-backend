@@ -28,6 +28,11 @@ class ArticleCreate(BaseModel):
         default="draft",
         examples=["draft"],
     )
+    cover_image_url: str | None = Field(
+        default=None,
+        max_length=500,
+        examples=["https://example.com/cover.jpg"],
+    )
 
 
 class ArticleUpdate(BaseModel):
@@ -50,6 +55,11 @@ class ArticleUpdate(BaseModel):
     status: ArticleStatus | None = Field(
         default=None,
         examples=["published"],
+    )
+    cover_image_url: str | None = Field(
+        default=None,
+        max_length=500,
+        examples=["https://example.com/cover.jpg"],
     )
 
 
@@ -75,6 +85,7 @@ class ArticleRead(BaseModel):
     id: int
     title: str
     content: str
+    cover_image_url: str | None = None
     status: str
     sentiment: str
     age_rating: str
@@ -88,6 +99,7 @@ class ArticleRead(BaseModel):
     category_id: int
     likes_count: int
     comments_count: int
+    is_liked: bool = False
     created_at: datetime
     updated_at: datetime
 
@@ -108,4 +120,5 @@ class ArticleStats(BaseModel):
 class ArticleLikeResponse(BaseModel):
     article_id: int
     liked: bool
+    is_liked: bool
     likes_count: int

@@ -9,7 +9,8 @@ export function Navbar() {
     <header className="navbar">
       <div className="navbar__container">
         <Link className="navbar__logo" to="/">
-          Blog Platform
+          <span className="navbar__logo-mark">B</span>
+          <span>Blog Platform</span>
         </Link>
 
         <input
@@ -35,7 +36,19 @@ export function Navbar() {
                 Кабинет
               </NavLink>
 
-              <NavLink className="navbar__link" to="/editor">
+              <NavLink className="navbar__link" to="/dashboard/categories">
+                Категории
+              </NavLink>
+
+              <NavLink className="navbar__link" to="/dashboard/comments">
+                Комментарии
+              </NavLink>
+
+              <NavLink className="navbar__link" to="/dashboard/profile">
+                Профиль
+              </NavLink>
+
+              <NavLink className="navbar__link navbar__link--accent" to="/editor">
                 Новая статья
               </NavLink>
             </>
@@ -47,7 +60,7 @@ export function Navbar() {
                 Вход
               </NavLink>
 
-              <NavLink className="navbar__link" to="/register">
+              <NavLink className="navbar__link navbar__link--accent" to="/register">
                 Регистрация
               </NavLink>
             </>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Button } from '../components/Button/Button';
 import { Input } from '../components/Input/Input';
@@ -17,6 +17,7 @@ export function RegisterPage() {
   });
 
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -46,69 +47,95 @@ export function RegisterPage() {
       return;
     }
 
-    if (form.password.length < 6) {
-      setError('Пароль должен содержать минимум 6 символов.');
+    if (form.password.length < 8) {
+      setError('Пароль должен содержать минимум 8 символов.');
       return;
     }
 
     try {
+      setIsSubmitting(true);
       await register(form);
       navigate('/login');
     } catch {
       setError('Не удалось зарегистрироваться. Возможно, логин уже занят.');
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
   return (
-    <section className="page-section">
-      <div className="auth-card">
-        <h1 className="auth-card__title">Регистрация</h1>
-        <p className="auth-card__text">
-          Создайте аккаунт для публикации статей.
-        </p>
+    <section className="auth-page">
+      <div className="auth-shell">
+        <div className="auth-hero">
+          <p className="page-section__label">Создание аккаунта</p>
+          <h1 className="auth-hero__title">Начните публиковать статьи</h1>
+          <p className="auth-hero__text">
+            Зарегистрируйтесь, чтобы получить доступ к редактору,
+            черновикам, публикации статей и управлению комментариями.
+          </p>
 
-        <form className="form" onSubmit={handleSubmit}>
-          <Input
-            label="Имя"
-            name="first_name"
-            value={form.first_name}
-            onChange={handleChange}
-            placeholder="Иван"
-          />
+          <div className="auth-hero__features">
+            <span>Черновики</span>
+            <span>Публикации</span>
+            <span>Статистика</span>
+          </div>
+        </div>
 
-          <Input
-            label="Фамилия"
-            name="last_name"
-            value={form.last_name}
-            onChange={handleChange}
-            placeholder="Иванов"
-          />
+        <div className="auth-card">
+          <h2 className="auth-card__title">Регистрация</h2>
+          <p className="auth-card__text">
+            Заполните данные нового пользователя.
+          </p>
 
-          <Input
-            label="Логин"
-            name="login"
-            value={form.login}
-            onChange={handleChange}
-            placeholder="ivan"
-            autoComplete="username"
-          />
+          <form className="form" onSubmit={handleSubmit}>
+            <div className="form-grid form-grid--two">
+              <Input
+                label="Имя"
+                name="first_name"
+                value={form.first_name}
+                onChange={handleChange}
+                placeholder="Иван"
+              />
 
-          <Input
-            label="Пароль"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            type="password"
-            placeholder="password123"
-            autoComplete="new-password"
-          />
+              <Input
+                label="Фамилия"
+                name="last_name"
+                value={form.last_name}
+                onChange={handleChange}
+                placeholder="Иванов"
+              />
+            </div>
 
-          {error && <p className="form__error">{error}</p>}
+            <Input
+              label="Логин"
+              name="login"
+              value={form.login}
+              onChange={handleChange}
+              placeholder="ivan"
+              autoComplete="username"
+            />
 
-          <Button type="submit" size="large">
-            Зарегистрироваться
-          </Button>
-        </form>
+            <Input
+              label="Пароль"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              type="password"
+              placeholder="password123"
+              autoComplete="new-password"
+            />
+
+            {error && <p className="form__error">{error}</p>}
+
+            <Button type="submit" size="large" disabled={isSubmitting}>
+              {isSubmitting ? 'Регистрация...' : 'Зарегистрироваться'}
+            </Button>
+          </form>
+
+          <p className="auth-card__footer">
+            Уже есть аккаунт? <Link to="/login">Войти</Link>
+          </p>
+        </div>
       </div>
     </section>
   );

@@ -14,7 +14,7 @@ from app.schemas.comment import (
     CommentRead,
     CommentUpdate,
 )
-from app.services.comment_moderation import moderate_comment_text
+from app.services.comment_ai_moderation import moderate_comment_text
 
 
 router = APIRouter(

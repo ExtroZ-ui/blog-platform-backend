@@ -31,7 +31,7 @@ export function HomePage() {
   }, [selectedCategoryId, search]);
 
   useEffect(() => {
-    async function loadInitialData() {
+    async function loadData() {
       try {
         setError('');
         setIsLoading(true);
@@ -53,29 +53,45 @@ export function HomePage() {
       }
     }
 
-    loadInitialData();
+    loadData();
   }, [articleParams]);
 
   return (
-    <section className="page-section">
+    <section className="page-section page-section--hero">
       <div className="container">
-        <p className="page-section__label">
-          Платформа для блогов
-        </p>
+        <div className="hero-block">
+          <div>
+            <p className="page-section__label">
+              Платформа для блогов
+            </p>
 
-        <h1 className="page-section__title">
-          Опубликованные статьи
-        </h1>
+            <h1 className="page-section__title">
+              Опубликованные статьи
+            </h1>
 
-        <p className="page-section__text">
-          Читайте статьи пользователей, фильтруйте материалы по категориям,
-          оставляйте комментарии и ставьте лайки.
-        </p>
+            <p className="page-section__text">
+              Читайте материалы пользователей, фильтруйте статьи по категориям,
+              оставляйте комментарии и сохраняйте интересные публикации через лайки.
+            </p>
+          </div>
+
+          <div className="hero-stats">
+            <div className="hero-stats__item">
+              <strong>{articles.length}</strong>
+              <span>статей</span>
+            </div>
+
+            <div className="hero-stats__item">
+              <strong>{categories.length}</strong>
+              <span>категорий</span>
+            </div>
+          </div>
+        </div>
 
         <div className="articles-toolbar">
           <label className="toolbar-field">
             <span className="toolbar-field__label">
-              Поиск
+              Поиск статьи
             </span>
 
             <input
@@ -121,10 +137,10 @@ export function HomePage() {
         {!isLoading && !error && articles.length === 0 && (
           <div className="empty-state">
             <h2 className="empty-state__title">
-              Статей пока нет
+              Опубликованных статей пока нет
             </h2>
             <p className="empty-state__text">
-              Создайте и опубликуйте первую статью через личный кабинет.
+              Создайте статью в личном кабинете и опубликуйте её.
             </p>
           </div>
         )}

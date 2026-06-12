@@ -45,3 +45,19 @@ class Comment(Base):
         "Article",
         back_populates="comments",
     )
+
+    @property
+    def author_login(self) -> str | None:
+        if self.author is None:
+            return None
+
+        return self.author.login
+
+    @property
+    def author_name(self) -> str | None:
+        if self.author is None:
+            return None
+
+        full_name = f"{self.author.first_name} {self.author.last_name}".strip()
+
+        return full_name or self.author.login

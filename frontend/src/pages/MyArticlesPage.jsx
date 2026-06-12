@@ -12,13 +12,14 @@ import { Loader } from '../components/Loader/Loader';
 export function MyArticlesPage() {
   const [articles, setArticles] = useState([]);
   const [statusFilter, setStatusFilter] = useState('');
+  const [search, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
   const requestParams = useMemo(() => {
     const params = {
       skip: 0,
-      limit: 50,
+      limit: 100,
     };
 
     if (statusFilter) {
@@ -27,6 +28,27 @@ export function MyArticlesPage() {
 
     return params;
   }, [statusFilter]);
+
+  const filteredArticles = useMemo(() => {
+    const preparedSearch = search.trim().toLowerCase();
+
+    if (!preparedSearch) {
+      return articles;
+    }
+
+    return articles.filter((article) => (
+      article.title.toLowerCase().includes(preparedSearch)
+      || article.content.toLowerCase().includes(preparedSearch)
+    ));
+  }, [articles, search]);
+
+  const stats = useMemo(() => {
+    return {
+      total: articles.length,
+      published: articles.filter((article) => article.status === 'published').length,
+      drafts: articles.filter((article) => article.status === 'draft').length,
+    };
+  }, [articles]);
 
   const loadArticles = useCallback(async () => {
     try {
@@ -66,6 +88,7 @@ export function MyArticlesPage() {
 
     try {
       await deleteArticle(articleId);
+
       setArticles((currentArticles) => (
         currentArticles.filter((article) => article.id !== articleId)
       ));
@@ -75,14 +98,15 @@ export function MyArticlesPage() {
   }
 
   return (
-    <section className="page-section">
+    <section className="page-section my-articles-page">
       <div className="container">
-        <div className="page-head">
+        <div className="page-head page-head--panel">
           <div>
             <p className="page-section__label">Личный кабинет</p>
             <h1 className="page-section__title">Мои статьи</h1>
             <p className="page-section__text">
-              Управляйте своими черновиками и опубликованными материалами.
+              Управляйте черновиками, публикуйте материалы и отслеживайте
+              активность читателей.
             </p>
           </div>
 
@@ -93,7 +117,38 @@ export function MyArticlesPage() {
           </Link>
         </div>
 
-        <div className="articles-toolbar articles-toolbar--compact">
+        <div className="author-stats">
+          <article className="author-stat">
+            <span className="author-stat__label">Всего</span>
+            <strong>{stats.total}</strong>
+          </article>
+
+          <article className="author-stat">
+            <span className="author-stat__label">Опубликовано</span>
+            <strong>{stats.published}</strong>
+          </article>
+
+          <article className="author-stat">
+            <span className="author-stat__label">Черновики</span>
+            <strong>{stats.drafts}</strong>
+          </article>
+        </div>
+
+        <div className="articles-toolbar articles-toolbar--author">
+          <label className="toolbar-field">
+            <span className="toolbar-field__label">
+              Поиск по моим статьям
+            </span>
+
+            <input
+              className="toolbar-field__control"
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Название или текст статьи"
+            />
+          </label>
+
           <label className="toolbar-field">
             <span className="toolbar-field__label">
               Статус
@@ -119,21 +174,25 @@ export function MyArticlesPage() {
           </p>
         )}
 
-        {!isLoading && !error && articles.length === 0 && (
+        {!isLoading && !error && filteredArticles.length === 0 && (
           <div className="empty-state">
             <h2 className="empty-state__title">
-              Статей пока нет
+              Статей не найдено
             </h2>
             <p className="empty-state__text">
-              Создайте первую статью и сохраните её как черновик или опубликуйте.
+              Создайте первую статью или измените параметры фильтрации.
             </p>
           </div>
         )}
 
-        {!isLoading && articles.length > 0 && (
+        {!isLoading && filteredArticles.length > 0 && (
           <div className="table-list">
-            {articles.map((article) => (
+            {filteredArticles.map((article) => (
               <article className="my-article-card" key={article.id}>
+                <div className="my-article-card__visual">
+                  {article.title.slice(0, 1).toUpperCase()}
+                </div>
+
                 <div className="my-article-card__content">
                   <div className="my-article-card__meta">
                     <span className={`status status--${article.status}`}>
@@ -144,6 +203,7 @@ export function MyArticlesPage() {
 
                     <span>{article.age_rating}</span>
                     <span>{article.sentiment}</span>
+                    <span>{article.reading_time_minutes} мин.</span>
                   </div>
 
                   <h2 className="my-article-card__title">
@@ -155,9 +215,9 @@ export function MyArticlesPage() {
                   </p>
 
                   <div className="my-article-card__stats">
-                    <span>Просмотры: {article.views_count}</span>
-                    <span>Лайки: {article.likes_count}</span>
-                    <span>Комментарии: {article.comments_count}</span>
+                    <span>👁 {article.views_count}</span>
+                    <span>❤ {article.likes_count}</span>
+                    <span>💬 {article.comments_count}</span>
                   </div>
                 </div>
 
