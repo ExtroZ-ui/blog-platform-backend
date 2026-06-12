@@ -1,41 +1,122 @@
-# Блог платформа
+# Blog Platform
 
-Backend API для платформы блогов, разработанный на FastAPI.
+Полноценная платформа для блогов с backend API на FastAPI и frontend-интерфейсом на React.
 
-Проект позволяет пользователям регистрироваться, авторизоваться, создавать статьи, сохранять их в черновик, публиковать, комментировать статьи, ставить лайки и получать статистику. Также реализован модуль ИИ-анализа текста статьи.
-[![Backend CI](https://github.com/ExtroZ-ui/blog-platform-backend/actions/workflows/ci.yml/badge.svg)](https://github.com/ExtroZ-ui/blog-platform-backend/actions/workflows/ci.yml)
+Проект позволяет пользователям регистрироваться, авторизоваться, создавать статьи, сохранять их в черновик, публиковать, комментировать статьи, ставить лайки, просматривать статистику и использовать локальный модуль AI-анализа текста статьи.
+
+---
+
+## Быстрый доступ к опубликованному проекту
+
+### Frontend
+
+Публичная ссылка на пользовательский интерфейс:
+
+```text
+https://blog-platform-frontend-9qda.onrender.com
+```
+
+### Backend API
+
+Публичная ссылка на backend:
+
+```text
+https://blog-platform-api-m7cc.onrender.com
+```
+
+### Swagger / OpenAPI
+
+Документация API:
+
+```text
+https://blog-platform-api-m7cc.onrender.com/docs
+```
+
+### Health-check backend
+
+Проверка доступности backend:
+
+```text
+https://blog-platform-api-m7cc.onrender.com/health
+```
+
+### GitHub
+
+Репозиторий проекта:
+
+```text
+https://github.com/ExtroZ-ui/blog-platform-backend
+```
+
 ---
 
 ## Описание проекта
 
-Платформа для блогов — приложение, которое позволяет пользователям:
+Blog Platform — это веб-приложение для публикации и чтения статей.
 
-- читать опубликованные статьи;
-- создавать собственные статьи;
-- сохранять статьи в черновик;
-- публиковать статьи;
-- редактировать и удалять свои статьи;
-- оставлять комментарии;
-- ставить лайки;
-- просматривать статистику по статьям;
-- использовать ИИ-анализ содержания статьи.
+Пользователь может:
+
+* зарегистрироваться;
+* войти в личный кабинет;
+* создавать статьи;
+* сохранять статьи в черновик;
+* публиковать статьи;
+* редактировать и удалять свои статьи;
+* добавлять обложку статьи;
+* использовать форматирование текста;
+* просматривать опубликованные статьи;
+* оставлять комментарии;
+* ставить лайки;
+* просматривать свои комментарии;
+* менять пароль;
+* использовать предварительный AI-анализ статьи.
+
+Проект развёрнут на Render:
+
+* frontend — Render Static Site;
+* backend — Render Web Service Docker;
+* database — Render PostgreSQL.
 
 ---
 
 ## Стек технологий
 
-- Python 3.11
-- FastAPI
-- SQLAlchemy
-- Alembic
-- Pydantic
-- PostgreSQL
-- SQLite для локальной разработки
-- JWT авторизация
-- Pytest
-- Docker
-- Docker Compose
-- Uvicorn
+### Backend
+
+* Python 3.11
+* FastAPI
+* SQLAlchemy
+* Alembic
+* Pydantic
+* Pydantic Settings
+* PostgreSQL
+* SQLite для локальной разработки без Docker
+* JWT авторизация
+* Passlib / bcrypt
+* Pytest
+* Uvicorn
+* Docker
+
+### Frontend
+
+* JavaScript
+* React
+* Vite
+* React Router
+* Axios
+* CSS
+* PWA
+* Service Worker
+* Vite PWA
+* Nginx для Docker-сборки
+
+### Инфраструктура
+
+* Docker
+* Docker Compose
+* Render
+* Render PostgreSQL
+* GitHub
 
 ---
 
@@ -43,90 +124,122 @@ Backend API для платформы блогов, разработанный �
 
 ### Авторизация и пользователи
 
-- регистрация пользователя;
-- вход пользователя;
-- JWT access token;
-- JWT refresh token;
-- обновление токена;
-- смена пароля;
-- получение данных текущего пользователя.
+* регистрация пользователя;
+* вход пользователя;
+* JWT access token;
+* JWT refresh token;
+* обновление токена;
+* получение данных текущего пользователя;
+* смена пароля;
+* хранение паролей в хешированном виде;
+* защита приватных страниц frontend.
 
 ### Категории
 
-- создание категории;
-- получение списка категорий;
-- получение категории по ID;
-- редактирование категории;
-- удаление категории;
-- защита от удаления категории, если в ней есть статьи.
+* создание категории;
+* получение списка категорий;
+* получение категории по ID;
+* редактирование категории;
+* удаление категории;
+* защита от удаления категории, если в ней есть статьи.
 
 ### Статьи
 
-- создание статьи;
-- редактирование статьи;
-- удаление статьи;
-- получение опубликованных статей;
-- получение своих статей;
-- сохранение статьи как черновика;
-- публикация статьи;
-- фильтрация статей;
-- пагинация;
-- просмотр статистики статьи.
+* создание статьи;
+* сохранение статьи как черновика;
+* публикация статьи;
+* редактирование статьи;
+* удаление статьи;
+* получение опубликованных статей;
+* получение своих статей;
+* открытие отдельной статьи;
+* добавление URL обложки;
+* отображение обложки в карточке и на странице статьи;
+* форматированный текст статьи;
+* фильтрация и пагинация;
+* подсчёт просмотров;
+* просмотр статистики статьи.
 
 ### Комментарии
 
-- создание комментария к опубликованной статье;
-- просмотр комментариев статьи;
-- просмотр своих комментариев;
-- редактирование своего комментария;
-- удаление своего комментария;
-- автоматическая модерация комментариев;
-- ручная модерация комментариев автором статьи.
+* создание комментария к опубликованной статье;
+* просмотр комментариев статьи;
+* просмотр своих комментариев;
+* редактирование своего комментария;
+* удаление своего комментария;
+* автоматическая модерация комментариев;
+* ручная модерация комментариев автором статьи;
+* публичное отображение только одобренных комментариев.
 
-### Лайки и статистика
+### Лайки
 
-- постановка лайка статье;
-- повторный запрос снимает лайк;
-- подсчёт количества лайков;
-- подсчёт количества просмотров;
-- подсчёт количества комментариев.
+* постановка лайка статье;
+* повторный запрос снимает лайк;
+* отображение количества лайков;
+* отображение состояния лайка в интерфейсе.
+
+### Frontend
+
+* главная страница со статьями;
+* страница входа;
+* страница регистрации;
+* личный кабинет;
+* страница категорий;
+* страница создания и редактирования статьи;
+* страница просмотра статьи;
+* страница моих статей;
+* страница моих комментариев;
+* страница профиля;
+* навигационное меню;
+* карточки статей;
+* формы ввода;
+* адаптивная вёрстка;
+* production-сборка через Vite;
+* PWA и Service Worker.
 
 ---
 
-## ИИ-функции
+## AI-функции
 
 В проекте реализован локальный модуль анализа статьи без подключения внешних API.
 
-ИИ-модуль определяет:
+AI-модуль определяет:
 
-- тональность статьи:
-  - `positive`
-  - `negative`
-  - `neutral`
+* тональность статьи:
 
-- возрастной рейтинг:
-  - `0+`
-  - `12+`
-  - `16+`
-  - `18+`
+  * `positive`;
+  * `negative`;
+  * `neutral`;
 
-- краткое резюме статьи;
-- ключевые слова;
-- примерное время чтения;
-- уровень модерационного риска:
-  - `low`
-  - `medium`
-  - `high`
+* возрастной рейтинг:
 
-- рекомендацию автору перед публикацией.
+  * `0+`;
+  * `6+`;
+  * `12+`;
+  * `16+`;
+  * `18+`;
 
-Также реализован отдельный endpoint для предварительного анализа текста статьи перед созданием статьи.
+* краткое резюме статьи;
+
+* ключевые слова;
+
+* примерное время чтения;
+
+* уровень модерационного риска:
+
+  * `low`;
+  * `medium`;
+  * `high`;
+
+* рекомендацию автору перед публикацией.
+
+Также реализован отдельный endpoint для предварительного анализа текста статьи перед созданием или публикацией.
 
 ---
 
 ## Модель данных
 
-В проекте используются следующие основные таблицы:
+В проекте используются основные таблицы:
 
 ### users
 
@@ -134,13 +247,13 @@ Backend API для платформы блогов, разработанный �
 
 Поля:
 
-- `id`
-- `first_name`
-- `last_name`
-- `login`
-- `hashed_password`
-- `is_active`
-- `created_at`
+* `id`
+* `first_name`
+* `last_name`
+* `login`
+* `hashed_password`
+* `is_active`
+* `created_at`
 
 ### categories
 
@@ -148,8 +261,8 @@ Backend API для платформы блогов, разработанный �
 
 Поля:
 
-- `id`
-- `name`
+* `id`
+* `name`
 
 ### articles
 
@@ -157,22 +270,23 @@ Backend API для платформы блогов, разработанный �
 
 Поля:
 
-- `id`
-- `title`
-- `content`
-- `status`
-- `sentiment`
-- `age_rating`
-- `ai_summary`
-- `ai_keywords`
-- `reading_time_minutes`
-- `moderation_risk`
-- `ai_recommendation`
-- `views_count`
-- `author_id`
-- `category_id`
-- `created_at`
-- `updated_at`
+* `id`
+* `title`
+* `content`
+* `cover_image_url`
+* `status`
+* `sentiment`
+* `age_rating`
+* `ai_summary`
+* `ai_keywords`
+* `reading_time_minutes`
+* `moderation_risk`
+* `ai_recommendation`
+* `views_count`
+* `author_id`
+* `category_id`
+* `created_at`
+* `updated_at`
 
 ### comments
 
@@ -180,12 +294,12 @@ Backend API для платформы блогов, разработанный �
 
 Поля:
 
-- `id`
-- `text`
-- `moderation_status`
-- `author_id`
-- `article_id`
-- `created_at`
+* `id`
+* `text`
+* `moderation_status`
+* `author_id`
+* `article_id`
+* `created_at`
 
 ### likes
 
@@ -193,10 +307,10 @@ Backend API для платформы блогов, разработанный �
 
 Поля:
 
-- `id`
-- `user_id`
-- `article_id`
-- `created_at`
+* `id`
+* `user_id`
+* `article_id`
+* `created_at`
 
 ---
 
@@ -231,16 +345,30 @@ blog-platform-backend/
 │   │   └── user.py
 │   ├── services/
 │   │   ├── article_ai.py
-│   │   └── comment_moderation.py
-│   ├── tests/
-│   │   ├── conftest.py
-│   │   ├── test_articles.py
-│   │   ├── test_auth.py
-│   │   ├── test_categories.py
-│   │   └── test_comments.py
+│   │   └── comment_ai_moderation.py
 │   └── main.py
+├── frontend/
+│   ├── public/
+│   │   └── favicon.svg
+│   ├── src/
+│   │   ├── api/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── hooks/
+│   │   ├── layouts/
+│   │   ├── pages/
+│   │   ├── styles/
+│   │   ├── tests/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   ├── package.json
+│   └── vite.config.js
+├── tests/
 ├── Dockerfile
 ├── docker-compose.yml
+├── render.yaml
 ├── requirements.txt
 ├── alembic.ini
 ├── pytest.ini
@@ -252,7 +380,71 @@ blog-platform-backend/
 
 ---
 
-## Установка и запуск локально
+## Локальный запуск через Docker Compose
+
+Основной рекомендуемый способ локального запуска — Docker Compose.
+
+Он поднимает:
+
+* PostgreSQL;
+* FastAPI backend;
+* React frontend через Nginx.
+
+### Запуск
+
+```bash
+docker compose up --build
+```
+
+После запуска будут доступны:
+
+### Frontend
+
+```text
+http://localhost:3000
+```
+
+### Backend API через Nginx frontend-контейнера
+
+```text
+http://localhost:3000/api/health
+```
+
+```text
+http://localhost:3000/api/articles
+```
+
+```text
+http://localhost:3000/api/categories
+```
+
+### Backend напрямую
+
+```text
+http://127.0.0.1:8000
+```
+
+### Swagger
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+### Остановка контейнеров
+
+```bash
+docker compose down
+```
+
+### Остановка контейнеров с удалением данных базы
+
+```bash
+docker compose down -v
+```
+
+---
+
+## Локальный запуск backend без Docker
 
 ### 1. Клонировать репозиторий
 
@@ -269,13 +461,13 @@ python -m venv venv
 
 ### 3. Активировать виртуальное окружение
 
-Для Windows:
+Windows:
 
 ```bash
 venv\Scripts\activate
 ```
 
-Для Linux / macOS:
+Linux / macOS:
 
 ```bash
 source venv/bin/activate
@@ -291,17 +483,19 @@ pip install -r requirements.txt
 
 Можно скопировать пример:
 
+Windows:
+
 ```bash
 copy .env.example .env
 ```
 
-Для Linux / macOS:
+Linux / macOS:
 
 ```bash
 cp .env.example .env
 ```
 
-Пример содержимого `.env`:
+Пример `.env`:
 
 ```env
 PROJECT_NAME=Blog Platform API
@@ -312,6 +506,8 @@ SECRET_KEY=blog-platform-secret-key-change-me
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 REFRESH_TOKEN_EXPIRE_DAYS=7
+
+CORS_ORIGINS=http://localhost:3000,http://localhost:5173,http://127.0.0.1:5173
 ```
 
 ### 6. Применить миграции
@@ -320,42 +516,13 @@ REFRESH_TOKEN_EXPIRE_DAYS=7
 alembic upgrade head
 ```
 
-### 7. Запустить приложение
+### 7. Запустить backend
 
 ```bash
 python -m uvicorn app.main:app --reload
 ```
 
-После запуска API будет доступен по адресу:
-
-```text
-http://127.0.0.1:8000
-```
-
-Swagger-документация:
-
-```text
-http://127.0.0.1:8000/docs
-```
-
----
-
-## Запуск через Docker Compose
-
-Для запуска проекта через Docker Compose используется PostgreSQL.
-
-### 1. Собрать и запустить контейнеры
-
-```bash
-docker compose up --build
-```
-
-После запуска будут подняты два контейнера:
-
-- `blog_platform_db` — база данных PostgreSQL;
-- `blog_platform_api` — backend-приложение FastAPI.
-
-API будет доступен по адресу:
+Backend будет доступен:
 
 ```text
 http://127.0.0.1:8000
@@ -367,45 +534,191 @@ Swagger:
 http://127.0.0.1:8000/docs
 ```
 
-### 2. Остановить контейнеры
+---
+
+## Локальный запуск frontend без Docker
+
+Перейти в папку frontend:
 
 ```bash
-docker compose down
+cd frontend
 ```
 
-### 3. Остановить контейнеры и удалить данные БД
+Установить зависимости:
 
 ```bash
-docker compose down -v
+npm install
+```
+
+Запустить dev-сервер:
+
+```bash
+npm run dev
+```
+
+Frontend будет доступен:
+
+```text
+http://localhost:5173
+```
+
+Для работы frontend с локальным backend можно создать файл:
+
+```text
+frontend/.env
+```
+
+И указать:
+
+```env
+VITE_API_BASE_URL=http://127.0.0.1:8000
+```
+
+Для Docker-запуска переменную указывать не нужно, так как frontend использует `/api`.
+
+---
+
+## Production-сборка frontend
+
+Перейти в папку frontend:
+
+```bash
+cd frontend
+```
+
+Собрать проект:
+
+```bash
+npm run build
+```
+
+После успешной сборки появится папка:
+
+```text
+frontend/dist
+```
+
+Проверить production-сборку локально:
+
+```bash
+npm run preview
+```
+
+По умолчанию preview будет доступен:
+
+```text
+http://localhost:4173
 ```
 
 ---
 
 ## Переменные окружения
 
-Пример файла `.env.example`:
+### Backend
+
+| Переменная                    | Описание                                          |
+| ----------------------------- | ------------------------------------------------- |
+| `PROJECT_NAME`                | Название проекта                                  |
+| `DATABASE_URL`                | Строка подключения к базе данных                  |
+| `SECRET_KEY`                  | Секретный ключ для JWT                            |
+| `ALGORITHM`                   | Алгоритм шифрования JWT                           |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | Время жизни access token                          |
+| `REFRESH_TOKEN_EXPIRE_DAYS`   | Время жизни refresh token                         |
+| `CORS_ORIGINS`                | Список разрешённых frontend-доменов через запятую |
+
+Пример для Docker Compose:
 
 ```env
-PROJECT_NAME=Blog Platform API
-
 DATABASE_URL=postgresql://blog_user:blog_password@db:5432/blog_platform
-
-SECRET_KEY=blog-platform-secret-key-change-me
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-REFRESH_TOKEN_EXPIRE_DAYS=7
+CORS_ORIGINS=http://localhost:3000,http://localhost:5173,http://127.0.0.1:5173
 ```
 
-Описание переменных:
+Пример для Render:
 
-| Переменная | Описание |
-|---|---|
-| `PROJECT_NAME` | Название проекта |
-| `DATABASE_URL` | Строка подключения к базе данных |
-| `SECRET_KEY` | Секретный ключ для JWT |
-| `ALGORITHM` | Алгоритм шифрования JWT |
-| `ACCESS_TOKEN_EXPIRE_MINUTES` | Время жизни access token |
-| `REFRESH_TOKEN_EXPIRE_DAYS` | Время жизни refresh token |
+```env
+DATABASE_URL=<Render PostgreSQL connection string>
+CORS_ORIGINS=http://localhost:3000,http://localhost:5173,http://127.0.0.1:5173,https://blog-platform-frontend-9qda.onrender.com
+```
+
+### Frontend
+
+| Переменная          | Описание        |
+| ------------------- | --------------- |
+| `VITE_API_BASE_URL` | URL backend API |
+
+Пример для Render:
+
+```env
+VITE_API_BASE_URL=https://blog-platform-api-m7cc.onrender.com
+```
+
+Если переменная не указана, frontend использует:
+
+```text
+/api
+```
+
+Это нужно для локального Docker-запуска через Nginx.
+
+---
+
+## Деплой на Render
+
+Проект подготовлен для деплоя на Render через файл:
+
+```text
+render.yaml
+```
+
+Render создаёт три ресурса:
+
+* `blog-platform-db` — PostgreSQL;
+* `blog-platform-api` — Docker Web Service;
+* `blog-platform-frontend` — Static Site.
+
+### Текущие опубликованные адреса
+
+Frontend:
+
+```text
+https://blog-platform-frontend-9qda.onrender.com
+```
+
+Backend:
+
+```text
+https://blog-platform-api-m7cc.onrender.com
+```
+
+Swagger:
+
+```text
+https://blog-platform-api-m7cc.onrender.com/docs
+```
+
+Health-check:
+
+```text
+https://blog-platform-api-m7cc.onrender.com/health
+```
+
+### Как обновить деплой
+
+После внесения изменений:
+
+```bash
+git add .
+git commit -m "Update project"
+git push
+```
+
+Render автоматически подтянет изменения из ветки `main`.
+
+Если нужно запустить деплой вручную:
+
+```text
+Render Dashboard → нужный сервис → Manual Deploy → Deploy latest commit
+```
 
 ---
 
@@ -435,27 +748,15 @@ alembic downgrade -1
 alembic current
 ```
 
+При запуске backend в Docker и на Render миграции применяются автоматически перед стартом приложения.
+
 ---
 
 ## Тестирование
 
-В проекте реализованы функциональные тесты для проверки:
+### Backend-тесты
 
-- регистрации;
-- авторизации;
-- refresh token;
-- смены пароля;
-- категорий;
-- статей;
-- ИИ-анализа статей;
-- лайков;
-- статистики;
-- комментариев;
-- модерации комментариев;
-- прав доступа;
-- валидации входных данных.
-
-Запуск тестов:
+В корне проекта:
 
 ```bash
 python -m pytest
@@ -467,57 +768,71 @@ python -m pytest
 python -m pytest --cov=app --cov-report=term-missing
 ```
 
-В проекте реализовано 49 тестов.
+### Frontend-тесты
+
+В папке frontend:
+
+```bash
+cd frontend
+npm run test:run
+```
+
+### Проверка frontend-сборки
+
+```bash
+cd frontend
+npm run build
+```
 
 ---
 
-## Основные эндпойнты API
+## Основные endpoint API
 
 ### Auth
 
-| Метод | Endpoint | Описание |
-|---|---|---|
-| `POST` | `/auth/register` | Регистрация пользователя |
-| `POST` | `/auth/login` | Авторизация пользователя |
-| `POST` | `/auth/refresh` | Обновление токенов |
-| `POST` | `/auth/change-password` | Смена пароля |
-| `GET` | `/auth/me` | Получение текущего пользователя |
+| Метод  | Endpoint                | Описание                        |
+| ------ | ----------------------- | ------------------------------- |
+| `POST` | `/auth/register`        | Регистрация пользователя        |
+| `POST` | `/auth/login`           | Авторизация пользователя        |
+| `POST` | `/auth/refresh`         | Обновление токенов              |
+| `POST` | `/auth/change-password` | Смена пароля                    |
+| `GET`  | `/auth/me`              | Получение текущего пользователя |
 
 ### Categories
 
-| Метод | Endpoint | Описание |
-|---|---|---|
-| `POST` | `/categories` | Создание категории |
-| `GET` | `/categories` | Получение списка категорий |
-| `GET` | `/categories/{category_id}` | Получение категории по ID |
-| `PATCH` | `/categories/{category_id}` | Редактирование категории |
-| `DELETE` | `/categories/{category_id}` | Удаление категории |
+| Метод    | Endpoint                    | Описание                   |
+| -------- | --------------------------- | -------------------------- |
+| `POST`   | `/categories`               | Создание категории         |
+| `GET`    | `/categories`               | Получение списка категорий |
+| `GET`    | `/categories/{category_id}` | Получение категории по ID  |
+| `PATCH`  | `/categories/{category_id}` | Редактирование категории   |
+| `DELETE` | `/categories/{category_id}` | Удаление категории         |
 
 ### Articles
 
-| Метод | Endpoint | Описание |
-|---|---|---|
-| `POST` | `/articles` | Создание статьи |
-| `GET` | `/articles` | Получение опубликованных статей |
-| `GET` | `/articles/my` | Получение своих статей |
-| `GET` | `/articles/{article_id}` | Получение статьи по ID |
-| `PATCH` | `/articles/{article_id}` | Редактирование статьи |
-| `DELETE` | `/articles/{article_id}` | Удаление статьи |
-| `POST` | `/articles/{article_id}/publish` | Публикация статьи |
-| `POST` | `/articles/{article_id}/like` | Поставить или убрать лайк |
-| `GET` | `/articles/{article_id}/stats` | Получение статистики статьи |
-| `POST` | `/articles/ai-preview` | Предварительный ИИ-анализ текста |
+| Метод    | Endpoint                         | Описание                         |
+| -------- | -------------------------------- | -------------------------------- |
+| `POST`   | `/articles`                      | Создание статьи                  |
+| `GET`    | `/articles`                      | Получение опубликованных статей  |
+| `GET`    | `/articles/my`                   | Получение своих статей           |
+| `GET`    | `/articles/{article_id}`         | Получение статьи по ID           |
+| `PATCH`  | `/articles/{article_id}`         | Редактирование статьи            |
+| `DELETE` | `/articles/{article_id}`         | Удаление статьи                  |
+| `POST`   | `/articles/{article_id}/publish` | Публикация статьи                |
+| `POST`   | `/articles/{article_id}/like`    | Поставить или убрать лайк        |
+| `GET`    | `/articles/{article_id}/stats`   | Получение статистики статьи      |
+| `POST`   | `/articles/ai-preview`           | Предварительный AI-анализ текста |
 
 ### Comments
 
-| Метод | Endpoint | Описание |
-|---|---|---|
-| `POST` | `/comments` | Создание комментария |
-| `GET` | `/comments/article/{article_id}` | Получение комментариев статьи |
-| `GET` | `/comments/my` | Получение своих комментариев |
-| `PATCH` | `/comments/{comment_id}` | Редактирование комментария |
-| `DELETE` | `/comments/{comment_id}` | Удаление комментария |
-| `PATCH` | `/comments/{comment_id}/moderate` | Модерация комментария |
+| Метод    | Endpoint                          | Описание                      |
+| -------- | --------------------------------- | ----------------------------- |
+| `POST`   | `/comments`                       | Создание комментария          |
+| `GET`    | `/comments/article/{article_id}`  | Получение комментариев статьи |
+| `GET`    | `/comments/my`                    | Получение своих комментариев  |
+| `PATCH`  | `/comments/{comment_id}`          | Редактирование комментария    |
+| `DELETE` | `/comments/{comment_id}`          | Удаление комментария          |
+| `PATCH`  | `/comments/{comment_id}/moderate` | Модерация комментария         |
 
 ---
 
@@ -534,13 +849,25 @@ python -m pytest --cov=app --cov-report=term-missing
 }
 ```
 
-### 2. Авторизация
-
-В endpoint `/auth/login` передаются данные формы:
+Endpoint:
 
 ```text
-username: ivan
-password: password123
+POST /auth/register
+```
+
+### 2. Авторизация
+
+Endpoint:
+
+```text
+POST /auth/login
+```
+
+Данные передаются как `application/x-www-form-urlencoded`:
+
+```text
+username=ivan
+password=password123
 ```
 
 В ответ API возвращает:
@@ -561,6 +888,12 @@ password: password123
 }
 ```
 
+Endpoint:
+
+```text
+POST /categories
+```
+
 ### 4. Создание статьи
 
 ```json
@@ -568,8 +901,15 @@ password: password123
   "title": "Новая статья о технологиях",
   "content": "Это полезная статья о развитии технологий. В ней рассказывается, как обучение помогает людям лучше понимать интернет.",
   "category_id": 1,
-  "status": "draft"
+  "status": "draft",
+  "cover_image_url": "https://example.com/cover.jpg"
 }
+```
+
+Endpoint:
+
+```text
+POST /articles
 ```
 
 ### 5. Публикация статьи
@@ -587,175 +927,127 @@ POST /articles/1/publish
 }
 ```
 
+Endpoint:
+
+```text
+POST /comments
+```
+
+---
+
+## Проверка опубликованного проекта
+
+После открытия frontend:
+
+```text
+https://blog-platform-frontend-9qda.onrender.com
+```
+
+Можно проверить основной сценарий:
+
+1. Зарегистрировать пользователя.
+2. Войти в аккаунт.
+3. Создать категорию.
+4. Создать статью.
+5. Добавить URL обложки.
+6. Выполнить AI-анализ.
+7. Опубликовать статью.
+8. Открыть статью на главной странице.
+9. Поставить лайк.
+10. Добавить комментарий.
+11. Проверить страницу профиля.
+12. Проверить страницу моих комментариев.
+
+---
+
+## PWA и Service Worker
+
+Во frontend реализован Service Worker через Vite PWA.
+
+После production-сборки и запуска сайта можно проверить Service Worker:
+
+```text
+F12 → Application → Service workers
+```
+
+Для опубликованной версии Service Worker работает на домене:
+
+```text
+https://blog-platform-frontend-9qda.onrender.com
+```
+
 ---
 
 ## Обработка ошибок
 
 Приложение обрабатывает основные ошибки:
 
-- невалидные входные данные;
-- повторная регистрация с тем же логином;
-- неверный логин или пароль;
-- отсутствие JWT-токена;
-- попытка изменить чужую статью;
-- попытка удалить чужой комментарий;
-- попытка комментировать черновик;
-- попытка поставить лайк черновику;
-- попытка удалить категорию, в которой есть статьи;
-- попытка модерировать комментарий не автором статьи.
+* невалидные входные данные;
+* повторная регистрация с тем же логином;
+* неверный логин или пароль;
+* отсутствие JWT-токена;
+* истёкший JWT-токен;
+* попытка изменить чужую статью;
+* попытка удалить чужую статью;
+* попытка удалить чужой комментарий;
+* попытка комментировать черновик;
+* попытка поставить лайк черновику;
+* попытка удалить категорию, в которой есть статьи;
+* попытка модерировать комментарий не автором статьи.
 
 ---
 
 ## Особенности реализации
 
-- Пароли пользователей хранятся в хешированном виде.
-- Для авторизации используется JWT.
-- Статьи имеют два состояния: `draft` и `published`.
-- Публично отображаются только опубликованные статьи.
-- Комментарии проходят автоматическую модерацию.
-- Комментарии со статусом `pending` и `rejected` не отображаются публично.
-- Автор статьи может вручную модерировать комментарии.
-- ИИ-анализ выполняется локально и не требует подключения к внешним сервисам.
-- При запуске через Docker Compose используется PostgreSQL.
-- При локальном запуске можно использовать SQLite.
+* Backend построен на FastAPI.
+* Frontend построен на React и Vite.
+* Для авторизации используется JWT.
+* Пароли пользователей хранятся в хешированном виде.
+* Статьи имеют два состояния: `draft` и `published`.
+* Публично отображаются только опубликованные статьи.
+* Комментарии проходят автоматическую модерацию.
+* Комментарии со статусом `pending` и `rejected` не отображаются публично.
+* Автор статьи может вручную модерировать комментарии.
+* AI-анализ выполняется локально и не требует подключения к внешним сервисам.
+* При запуске через Docker Compose используется PostgreSQL.
+* На Render используется Render PostgreSQL.
+* Frontend поддерживает PWA и Service Worker.
+* Локальный и production-запуск используют переменные окружения.
+* Проект может быть развёрнут локально и на Render без изменения исходного кода.
 
 ---
 
-## UI Kit
+## Команды для быстрой проверки
 
-В проект добавлен UI Kit для будущего frontend-интерфейса блог-платформы.
+### Локальный Docker-запуск
 
-UI Kit расположен в папке:
-
-```text
-ui_kit/
+```bash
+docker compose up --build
 ```
 
-Документация UI Kit доступна после запуска приложения:
+### Проверка backend
 
 ```text
-http://127.0.0.1:8000/ui-kit/
+http://localhost:3000/api/health
 ```
 
-При запуске через Docker Compose страница также доступна по адресу:
+### Проверка Swagger локально
 
 ```text
-http://127.0.0.1:8000/ui-kit/
+http://127.0.0.1:8000/docs
 ```
 
-### Реализованные компоненты UI Kit
-
-В UI Kit реализованы базовые компоненты интерфейса:
-
-- Button;
-- Input;
-- Dropdown;
-- Checkbox;
-- Radio button;
-- Card;
-- Navbar;
-- Container;
-- Grid-сетка.
-
-### Особенности реализации
-
-- компоненты оформлены по методологии БЭМ;
-- используется адаптивная верстка;
-- для расположения элементов применяются Flexbox и CSS Grid;
-- стили разделены по файлам;
-- есть отдельные файлы для переменных, базовых стилей, layout и компонентов;
-- документация оформлена как отдельная HTML-страница с примерами компонентов.
-
-### Структура UI Kit
+### Проверка опубликованного frontend
 
 ```text
-ui_kit/
-├── index.html
-├── favicon.svg
-└── css/
-    ├── main.css
-    ├── reset.css
-    ├── variables.css
-    ├── base.css
-    ├── layout.css
-    └── components/
-        ├── buttons.css
-        ├── inputs.css
-        ├── dropdown.css
-        ├── choices.css
-        ├── cards.css
-        └── navbar.css
+https://blog-platform-frontend-9qda.onrender.com
 ```
 
-### Компоненты
+### Проверка опубликованного Swagger
 
-#### Button
+```text
+https://blog-platform-api-m7cc.onrender.com/docs
+```
 
-Реализованы варианты кнопок:
+---
 
-- `button--primary`;
-- `button--secondary`;
-- `button--disabled`.
-
-Размеры:
-
-- `button--small`;
-- `button--medium`;
-- `button--large`.
-
-Поддерживаются состояния:
-
-- hover;
-- active;
-- focus;
-- disabled.
-
-#### Input
-
-Поле ввода поддерживает состояния:
-
-- normal;
-- focus;
-- error.
-
-Также реализован вариант поля ввода с иконкой поиска.
-
-#### Dropdown
-
-Реализован выпадающий список для выбора категории статьи.
-
-#### Checkbox и Radio
-
-Реализованы кастомные checkbox и radio button для фильтров и настроек.
-
-#### Card
-
-Карточка содержит:
-
-- заголовок;
-- текст;
-- тег категории;
-- кнопку действия;
-- вариант с изображением;
-- вариант без изображения.
-
-Размеры карточек:
-
-- small;
-- medium;
-- large.
-
-#### Navbar
-
-Навигационное меню адаптивное:
-
-- на desktop отображается горизонтально;
-- на мобильных устройствах превращается в hamburger-menu.
-
-#### Layout
-
-Реализованы:
-
-- центральный контейнер;
-- адаптивная grid-сетка;
-- flex-выравнивание элементов.
