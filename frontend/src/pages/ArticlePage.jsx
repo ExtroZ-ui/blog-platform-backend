@@ -56,7 +56,9 @@ export function ArticlePage() {
 
       setArticle(articleData);
       setIsLiked(Boolean(articleData.is_liked));
-      setComments(commentsData);
+      setComments(
+        commentsData.filter((comment) => comment.moderation_status === 'approved'),
+      );
     } catch {
       setError('Не удалось загрузить статью.');
     } finally {
